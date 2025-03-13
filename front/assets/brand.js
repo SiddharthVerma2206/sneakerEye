@@ -1,7 +1,3 @@
-// Get URL parameters
-const urlParams = new URLSearchParams(window.location.search);
-const query = urlParams.get('search') || '';
-
 // Track current data and page count
 let allSneakers = [];
 let filteredSneakers = [];
@@ -10,8 +6,6 @@ const itemsPerPage = 30;
 let siteOptions = [];
 
 // Currency conversion rates (approximate)
-
-// Currency conversion rates (default)
 const exchangeRates = {
     'usd': 1,
     'inr': 80 // Default fallback value
@@ -29,10 +23,26 @@ async function fetchExchangeRate() {
     }
 }
 
-
-// Update the search query text and input field
-document.getElementById('search-query-text').textContent = query;
-document.getElementById('search-input').value = query;
+// Get the brand name from the current page
+function getCurrentBrand() {
+    // Default to jordan if we can't determine
+    let brand = 'jordan';
+    
+    // Get from page URL if available
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.has('brand')) {
+        brand = urlParams.get('brand');
+    } else {
+        // Try to extract from filename
+        const path = window.location.pathname;
+        const filename = path.substring(path.lastIndexOf('/') + 1);
+        if (filename.includes('.html')) {
+            brand = filename.replace('.html', '');
+        }
+    }
+    
+    return brand;
+}
 
 // Function to get site options
 function getSiteOptions() {
@@ -163,7 +173,156 @@ function getSelectedSites() {
     return Array.from(siteCheckboxes).map(checkbox => checkbox.value);
 }
 
-// Update the applyCurrencyAndFilters function to filter by selected sites
+// Update the page title and header based on brand
+function updateBrandPageElements() {
+    const brand = getCurrentBrand();
+    const brandCapitalized = brand.charAt(0).toUpperCase() + brand.slice(1);
+    
+    // Update page title
+    document.title = `SneakerEye - ${brandCapitalized} Collection`;
+    
+    // Update header
+    const headerTitle = document.querySelector('.search-title');
+    if (headerTitle) {
+        headerTitle.innerHTML = `${brandCapitalized} <span class="search-query">Collection</span>`;
+    }
+    
+    // Update loading message
+    const loadingMessage = document.getElementById('loading');
+    if (loadingMessage) {
+        loadingMessage.textContent = `Loading ${brandCapitalized} sneakers...`;
+    }
+}
+
+// Function to get brand data from the API
+function getBrandData() {
+    // Show loading indicator
+    document.getElementById('loading').style.display = 'block';
+    document.getElementById('error-message').style.display = 'none';
+    document.getElementById('no-results').style.display = 'none';
+    document.getElementById('results').innerHTML = '';
+    document.getElementById('view-more-button').style.display = 'none';
+    
+    // Reset tracking variables
+    allSneakers = [];
+    filteredSneakers = [];
+    displayedCount = 0;
+    
+    // Get filter and sort options
+    const sortOption = document.getElementById('sort-option').value;
+    const selectedSites = getSelectedSites();
+    
+    // Get the brand from the current file path or URL
+    const brandName = getCurrentBrand();
+    
+    // If no sites are selected, show no results
+    if (selectedSites.length === 0) {
+        document.getElementById('loading').style.display = 'none';
+        let noresult = document.getElementById("no-results");
+        noresult.innerHTML = `
+            <div class="no-results">
+                <h3>No sites selected</h3>
+                <p>Please select at least one site to view ${brandName} sneakers.</p>
+            </div>
+        `;
+        noresult.style.display = 'block';
+        return;
+    }
+    
+    // Fetch brand sneakers from the API
+    fetch(`http://127.0.0.1:8000/brand?brand=${encodeURIComponent(brandName)}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            // Hide loading indicator
+            document.getElementById('loading').style.display = 'none';
+            
+            let resultsDiv = document.getElementById("results");
+            let noresult = document.getElementById("no-results");
+            resultsDiv.innerHTML = ""; // Clear previous results
+            
+            // Filter sneakers by selected sites
+            const filteredData = data.filter(sneaker => selectedSites.includes(sneaker.site));
+            
+            if (filteredData.length === 0) {
+                noresult.innerHTML = `
+                    <div class="no-results">
+                        <h3>No ${brandName} sneakers found in the selected sites</h3>
+                        <p>Try selecting more sites or check back later for new arrivals.</p>
+                    </div>
+                `;
+                noresult.style.display = 'block';
+                return;
+            }
+            
+            // Store all sneakers data
+            allSneakers = filteredData;
+            
+            // Apply client-side sorting
+            applySorting();
+            
+            // Apply client-side currency conversion and filtering
+            applyCurrencyAndFilters();
+            
+            // Display the first batch of items
+            displayMoreSneakers();
+        })
+        .catch(error => {
+            console.error(`Error fetching ${brandName} sneakers:`, error);
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('error-message').style.display = 'block';
+        });
+}
+
+// Function to apply sorting to the sneakers
+function applySorting() {
+    const sortOption = document.getElementById('sort-option').value;
+    
+    if (sortOption === "price-low-high") {
+        // Sort by the lowest price variant
+        allSneakers.sort((a, b) => {
+            const aMinPrice = Math.min(...a.variants.map(v => v.price || Infinity));
+            const bMinPrice = Math.min(...b.variants.map(v => v.price || Infinity));
+            return aMinPrice - bMinPrice;
+        });
+    } else if (sortOption === "price-high-low") {
+        // Sort by the highest price variant
+        allSneakers.sort((a, b) => {
+            const aMaxPrice = Math.max(...a.variants.map(v => v.price || 0));
+            const bMaxPrice = Math.max(...b.variants.map(v => v.price || 0));
+            return bMaxPrice - aMaxPrice;
+        });
+    } else if (sortOption === "discount") {
+        // Sort by the highest discount percentage
+        allSneakers.sort((a, b) => {
+            const getMaxDiscount = (sneaker) => {
+                let discounts = [];
+                for (let v of sneaker.variants) {
+                    if (v.full_price && v.price) {
+                        const discount = (1 - v.price / v.full_price) * 100;
+                        discounts.push(discount);
+                    }
+                }
+                return discounts.length > 0 ? Math.max(...discounts) : 0;
+            };
+            
+            return getMaxDiscount(b) - getMaxDiscount(a);
+        });
+    } else if (sortOption === "newest") {
+        // Sort by created_at timestamp if available
+        allSneakers.sort((a, b) => {
+            const aDate = a.created_at ? new Date(a.created_at) : new Date(0);
+            const bDate = b.created_at ? new Date(b.created_at) : new Date(0);
+            return bDate - aDate;
+        });
+    }
+}
+
+// Apply filters and currency conversion to the data
 function applyCurrencyAndFilters() {
     const currencyOption = document.getElementById('currency-option').value;
     const selectedSites = getSelectedSites();
@@ -175,8 +334,8 @@ function applyCurrencyAndFilters() {
     if (currencyOption !== 'original') {
         filteredSneakers.forEach(sneaker => {
             sneaker.variants.forEach(variant => {
-                // Convert prices based on their range (assuming < 2000 is USD, otherwise INR)
-                const sourceCurrency = variant.price < 2000 ? 'usd' : 'inr';
+                // Convert prices based on their range (assuming < 1000 is USD, otherwise INR)
+                const sourceCurrency = variant.price < 1000 ? 'usd' : 'inr';
                 
                 if (sourceCurrency !== currencyOption) {
                     // Convert to target currency
@@ -206,7 +365,7 @@ function applyCurrencyAndFilters() {
         noresult.innerHTML = `
             <div class="no-results">
                 <h3>No sneakers found</h3>
-                <p>No matching products in the selected sites. Try selecting more sites or changing your search.</p>
+                <p>No matching products in the selected sites. Try selecting more sites.</p>
             </div>
         `;
         noresult.style.display = 'block';
@@ -214,130 +373,6 @@ function applyCurrencyAndFilters() {
     } else {
         document.getElementById('no-results').style.display = 'none';
     }
-}
-
-// Function to get data from the API
-function getdata() {
-    // Show loading indicator
-    document.getElementById('loading').style.display = 'block';
-    document.getElementById('error-message').style.display = 'none';
-    document.getElementById('no-results').style.display = 'none';
-    document.getElementById('results').innerHTML = '';
-    document.getElementById('view-more-button').style.display = 'none';
-    
-    // Reset tracking variables
-    allSneakers = [];
-    filteredSneakers = [];
-    displayedCount = 0;
-    
-    let query = document.getElementById("search-input").value;
-    if (!query) {
-        document.getElementById('loading').style.display = 'none';
-        return; // If input is empty, do nothing
-    }
-    
-    // Get filter and sort options
-    const sortOption = document.getElementById('sort-option').value;
-    const selectedSites = getSelectedSites();
-    
-    // Update the search query text
-    document.getElementById('search-query-text').textContent = query;
-    
-    // If no sites are selected, show no results
-    if (selectedSites.length === 0) {
-        document.getElementById('loading').style.display = 'none';
-        let noresult = document.getElementById("no-results");
-        noresult.innerHTML = `
-            <div class="no-results">
-                <h3>No sites selected</h3>
-                <p>Please select at least one site to search.</p>
-            </div>
-        `;
-        noresult.style.display = 'block';
-        return;
-    }
-    
-    // Fetch all sneakers from the API
-    fetch(`http://127.0.0.1:8000/sneakers?search=${encodeURIComponent(query)}&sort=${sortOption}&site=all`)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(data => {
-            // Hide loading indicator
-            document.getElementById('loading').style.display = 'none';
-            
-            let resultsDiv = document.getElementById("results");
-            let noresult = document.getElementById("no-results");
-            resultsDiv.innerHTML = ""; // Clear previous results
-            
-            // Filter sneakers by selected sites
-            const filteredData = data.filter(sneaker => selectedSites.includes(sneaker.site));
-            
-            if (filteredData.length === 0) {
-                noresult.innerHTML = `
-                    <div class="no-results">
-                        <h3>No sneakers found for "${query}" in the selected sites</h3>
-                        <p>Try searching with different keywords or select more sites.</p>
-                    </div>
-                `;
-                noresult.style.display = 'block';
-                return;
-            }
-            
-            // Store all sneakers data
-            allSneakers = filteredData;
-            
-            // Apply client-side currency conversion if needed
-            applyCurrencyAndFilters();
-            
-            // Display the first batch of items
-            displayMoreSneakers();
-        })
-        .catch(error => {
-            console.error("Error fetching sneakers:", error);
-            document.getElementById('loading').style.display = 'none';
-            document.getElementById('error-message').style.display = 'block';
-        });
-}
-
-// Apply filters and currency conversion to the data
-function applyCurrencyAndFilters() {
-    const currencyOption = document.getElementById('currency-option').value;
-    
-    // Create a deep copy of the sneakers to apply transformations
-    filteredSneakers = JSON.parse(JSON.stringify(allSneakers));
-    
-    // Apply currency conversion if not using original currency
-    if (currencyOption !== 'original') {
-        filteredSneakers.forEach(sneaker => {
-            sneaker.variants.forEach(variant => {
-                // Convert prices based on their range (assuming < 2000 is USD, otherwise INR)
-                const sourceCurrency = variant.price < 2000 ? 'usd' : 'inr';
-                
-                if (sourceCurrency !== currencyOption) {
-                    // Convert to target currency
-                    if (sourceCurrency === 'usd' && currencyOption === 'inr') {
-                        variant.price = variant.price * exchangeRates.inr;
-                        if (variant.full_price) {
-                            variant.full_price = variant.full_price * exchangeRates.inr;
-                        }
-                    } else if (sourceCurrency === 'inr' && currencyOption === 'usd') {
-                        variant.price = variant.price / exchangeRates.inr;
-                        if (variant.full_price) {
-                            variant.full_price = variant.full_price / exchangeRates.inr;
-                        }
-                    }
-                }
-            });
-        });
-    }
-    
-    // Reset display counter
-    displayedCount = 0;
-    document.getElementById('results').innerHTML = "";
 }
 
 function displayMoreSneakers() {
@@ -359,8 +394,9 @@ function displayMoreSneakers() {
     // Add the new items to the results
     nextBatch.forEach(sneaker => {
         // Calculate discount percentage if full_price is available
-        const discount = sneaker.full_price && sneaker.full_price > sneaker.price 
-            ? Math.round((1 - sneaker.price / sneaker.full_price) * 100) 
+        let firstVariant = sneaker.variants[0] || {};
+        const discount = firstVariant.full_price && firstVariant.price 
+            ? Math.round((1 - firstVariant.price / firstVariant.full_price) * 100) 
             : 0;
         
         // Determine currency symbol based on the selected currency option
@@ -369,7 +405,7 @@ function displayMoreSneakers() {
         
         if (currencyOption === 'original') {
             // Use the original currency symbol based on price range
-            defaultCurrencySymbol = sneaker.variants[0].price < 2000 ? '$' : '₹';
+            defaultCurrencySymbol = firstVariant.price < 1000 ? '$' : '₹';
         } else {
             // Use the selected currency symbol
             defaultCurrencySymbol = currencyOption === 'usd' ? '$' : '₹';
@@ -385,7 +421,7 @@ function displayMoreSneakers() {
                 <img src="${sneaker.main_image}" 
                      alt="${sneaker.title}" 
                      class="sneaker-image" 
-                     onmouseover="this.src='${sneaker.hover_image}'" 
+                     onmouseover="this.src='${sneaker.hover_image || sneaker.main_image}'" 
                      onmouseout="this.src='${sneaker.main_image}'">
             </a>
             <div class="sneaker-info">
@@ -399,7 +435,7 @@ function displayMoreSneakers() {
                     ${sneaker.variants.map((variant, index) => {
                         let currencySymbol = defaultCurrencySymbol;
                         return `
-                            <div class="size-box" onclick="updatePrice(this, ${variant.price}, ${variant.full_price}, '${currencySymbol}')" data-index="${index}">
+                            <div class="size-box" onclick="updatePrice(this, ${variant.price}, ${variant.full_price || 'null'}, '${currencySymbol}')" data-index="${index}">
                                 ${variant.size}
                             </div>
                         `;
@@ -455,42 +491,23 @@ window.onload = function() {
     setupThemeToggle();
     fetchExchangeRate();
     
+    // Update brand page elements
+    updateBrandPageElements();
+    
     // Get site options for filtering
     getSiteOptions();
     
-    // Wait until site options are loaded before searching
+    // Wait until site options are loaded before loading brand data
     let checkSitesLoaded = setInterval(() => {
         if (siteOptions.length > 0) {
             clearInterval(checkSitesLoaded);
-            if (query) getdata();
+            getBrandData();
         }
     }, 100);
-    
-    // Set up search functionality
-    document.getElementById('search-button').addEventListener('click', function() {
-        getdata();
-    });
-    
-    // Enter key search
-    document.getElementById('search-input').addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') {
-            getdata();
-        }
-    });
     
     // Set up View More button functionality
     document.getElementById('view-more-button').addEventListener('click', function() {
         displayMoreSneakers();
-    });
-    
-    // Set up Apply Filters button functionality
-    document.getElementById('apply-filters').addEventListener('click', function() {
-        if (allSneakers.length > 0) {
-            applyCurrencyAndFilters();
-            displayMoreSneakers();
-        } else {
-            getdata(); // If no data loaded yet, perform search
-        }
     });
 };
 

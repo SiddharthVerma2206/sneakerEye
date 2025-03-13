@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SneakerEye - Jordan Collection</title>
+    <link rel="stylesheet" href="../assets/search.css">
+    <link rel="stylesheet" href="../assets/theme.css">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <a href="../first.html" class="logo">Sneaker<span>Eye</span></a>
+        <div class="nav-buttons">
+            <a href="#" class="signin">Sign In</a>
+            <a href="#" class="signup">Sign Up</a>
+            <a href="#"></a>
+            <button id="theme-toggle" class="theme-toggle">
+                <span class="light-icon">🌞</span>
+                <span class="dark-icon">🌙</span>
+            </button>
+        </div>
+    </nav>
+    
+    <!-- Brand Header -->
+    <div class="search-header">
+        <h1 class="search-title">Adidas<span class="search-query">Collection</span></h1>
+        
+        <!-- New Brand Headline -->
+        <div class="brand-headline">
+            <h2>Find the Best <span class="brand-accent">Adidas</span> at the Best Prices</h2>
+        </div>
+    </div>
+    
+    <!-- Filter and Sort Options -->
+    <div class="options-bar">
+        <div class="option-group">
+            <label>Sort by:</label>
+            <select id="sort-option" onchange="getBrandData()">
+                <option value="price-low-high">Price: Low to High </option>
+                <option value="price-high-low">Price: High to Low </option>
+                <option value="discount">Highest Discount</option>
+                <option value="newest">Newest First</option>
+            </select>
+        </div>
+        
+        <div class="option-group">
+            <label>Currency:</label>
+            <select id="currency-option" onchange="applyCurrencyAndFilters(); displayMoreSneakers();">
+                <option value="original">Original</option>
+                <option value="usd">USD ($)</option>
+                <option value="inr">INR (₹)</option>
+            </select>
+        </div>
+        
+        <!-- Site Filter Dropdown -->
+        <div class="filter-dropdown">
+            <label for="site-filter-dropdown">Filter by Sites:</label>
+            <div class="dropdown-container">
+                <div class="dropdown-header" id="site-filter-header">
+                    <span id="selected-sites-text">All Sites</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                </div>
+                <div class="dropdown-menu" id="site-filter-menu">
+                    <div class="select-all-option">
+                        <input type="checkbox" id="select-all-sites" checked>
+                        <label for="select-all-sites">Select All</label>
+                    </div>
+                    <div class="dropdown-divider"></div>
+                    <div id="site-options" class="site-options-container">
+                        <!-- Individual site options will be added here -->
+                    </div>
+                    <div class="dropdown-footer">
+                        <button id="apply-site-filter" class="apply-button">Apply</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="main-content">
+        <!-- Results Container -->
+        <div class="results-container">
+            <div id="loading" class="loading-message" style="display: none;">
+                Loading Adidas sneakers...
+            </div>
+            
+            <div id="error-message" class="error-message" style="display: none;">
+                Oops! Something went wrong while fetching Adidas sneakers. Please try again.
+            </div>
+            
+            <div class="no-results-message" id="no-results" style="display: none;">
+                <!-- No results message will be populated here via JavaScript -->
+            </div>
+            
+            <div class="results-grid" id="results">
+                <!-- Results will be populated here via JavaScript -->
+            </div>
+            
+            <!-- View More Button -->
+            <div class="view-more-container">
+                <button class="view-more-button" id="view-more-button" style="display: none;">
+                    View More
+                </button>
+            </div>
+        </div>
+        <button id="scrollTopBtn" class="scrollTopBtn" onclick="scrollToTop()">▲</button>
+    </div>
+    
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-logo">
+            Sneaker<span>Eye</span>
+        </div>
+        <div class="footer-info">
+            <p>© 2025 SneakerEye</p>
+            <p>The ultimate destination for sneaker enthusiasts</p>
+            <p>Comparing prices across 50+ retailers</p>
+        </div>
+        <div class="footer-contact">
+            <p>Questions? <a href="mailto:support@sneakerEye.com">support@sneakerEye.com</a></p>
+            <p>Customer Service: <a href="tel:+18889990000">1-888-999-0000</a></p>
+            <p><a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a></p>
+        </div>
+    </footer>
+    <script src="../assets/brand.js"></script>
+</body>
+</html>
