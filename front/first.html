@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SneakerEye - Find the Best Deals on Sneakers</title>
+    <link rel="stylesheet" href="assets/first.css">
+    <link rel="stylesheet" href="assets/theme.css">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <a href="#" class="logo">Sneaker<span>Eye</span></a>
+        <div class="nav-buttons">
+            <a href="#" class="signin">Sign In</a>
+            <a href="#" class="signup">Sign Up</a>
+            <a href="#"></a>
+            <button id="theme-toggle" class="theme-toggle">
+                <span class="light-icon">🌞</span>
+                <span class="dark-icon">🌙</span>
+            </button>
+        </div>
+    </nav>
+    
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-text">
+            <h1>
+                Find Me<br>
+                The Best Deal<br>
+                On <span class="typewriter" id="typewriter"></span>
+            </h1>
+            <p>Compare prices across major retailers in seconds. Never overpay for sneakers again.</p>
+            
+            <!-- Search Bar -->
+            <div class="search-bar">
+                <input type="text" class="search-input" id="search-input" placeholder="Enter sneaker name, brand, or model...">
+                <button class="search-button" onclick="getdata()">Search</button>
+            </div>
+        </div>
+        
+        <div class="hero-image">
+            <img src="static/jordans.png" alt="Sneakers floating" class="floating-image">
+        </div>
+    </section>
+    <section>
+        <div id="results"></div>
+    </section>
+
+    <!-- Typewriter Effect JavaScript -->
+    <script>
+        // List of words for typewriter effect
+        const words = ["Jordans", "Nikes", "Adidas","New Balance", "Yeezys",  "Sneakers"];
+        let wordIndex = 0;
+        let charIndex = 0;
+        let isDeleting = false;
+        let typewriterElement = document.getElementById("typewriter");
+        
+        function typeWriter() {
+            const currentWord = words[wordIndex];
+            
+            if (isDeleting) {
+                // Remove a character
+                typewriterElement.textContent = currentWord.substring(0, charIndex - 1);
+                charIndex--;
+            } else {
+                // Add a character
+                typewriterElement.textContent = currentWord.substring(0, charIndex + 1);
+                charIndex++;
+            }
+            
+            // Speed control (faster when deleting)
+            let typingSpeed = isDeleting ? 50 : 150;
+            
+            // Handle word completion or deletion
+            if (!isDeleting && charIndex === currentWord.length) {
+                // Pause at the end of a word
+                typingSpeed = 1500;
+                isDeleting = true;
+            } else if (isDeleting && charIndex === 0) {
+                isDeleting = false;
+                // Move to next word
+                wordIndex = (wordIndex + 1) % words.length;
+                // Pause before typing next word
+                typingSpeed = 500;
+            }
+            
+            setTimeout(typeWriter, typingSpeed);
+        }
+        
+        // Start the typewriter effect
+        window.onload = function() {
+            typeWriter();
+            setupThemeToggle();
+        }
+
+        function getdata() {
+            let query = document.getElementById("search-input").value;
+            if (!query) return;
+            window.location.href = `search.html?search=${encodeURIComponent(query)}`;
+        }
+        document.getElementById('search-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                getdata();
+            }
+        });
+
+        // Theme toggle functionality
+        function setupThemeToggle() {
+            const themeToggle = document.getElementById('theme-toggle');
+            const currentTheme = localStorage.getItem('theme') || 'light';
+            
+            // Set initial theme from localStorage or default to light
+            document.documentElement.setAttribute('data-theme', currentTheme);
+            
+            themeToggle.addEventListener('click', function() {
+                const currentTheme = document.documentElement.getAttribute('data-theme');
+                const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+                
+                document.documentElement.setAttribute('data-theme', newTheme);
+                localStorage.setItem('theme', newTheme);
+            });
+        }
+    </script>
+</body>
+</html>

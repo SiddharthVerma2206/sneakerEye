@@ -1,0 +1,692 @@
+ /* Reset and base styles */
+ * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    height: 100%;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Navigation bar */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.0rem 5%;
+    background-color: white;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+}
+
+.logo {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #333;
+    text-decoration: none;
+}
+
+.logo span {
+    color: #ff6b6b;
+}
+
+.nav-buttons a {
+    text-decoration: none;
+    margin-left: 1.5rem;
+    font-weight: 600;
+}
+
+.signin {
+    color: #555;
+}
+
+.signup {
+    color: white;
+    background-color: #ff6b6b;
+    padding: 0.5rem 1.2rem;
+    border-radius: 25px;
+    transition: background-color 0.3s;
+}
+
+.signup:hover {
+    background-color: #ff5252;
+}
+
+/* Search header section */
+.search-header {
+    padding: 2rem 5%;
+    padding-bottom: 2%;
+    background-color: white;
+    border-bottom: 1px solid #eee;
+    text-align: center; /* Center the content */
+}
+
+.search-title {
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+}
+
+.search-query {
+    color: #ff6b6b;
+}
+
+.search-bar {
+    border-radius: 30px;
+    display: flex;
+    max-width: 800px;
+    margin: 0 auto; /* Center the search bar */
+}
+
+.search-input {
+    flex: 1;
+    padding: 0.8rem 1.5rem;
+    font-size: 1rem;
+    border: 2px solid #ddd;
+    border-radius: 30px 0 0 30px;
+    outline: none;
+}
+
+.search-button {
+    padding: 0.8rem 1.5rem;
+    background-color: #ff6b6b;
+    color: white;
+    border: none;
+    border-radius: 0 30px 30px 0;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.3s;
+}
+
+.search-button:hover {
+    background-color: #ff5252;
+}
+
+/* Filter and sort bar */
+.filter-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 5%;
+    background-color: white;
+    border-bottom: 1px solid #eee;
+    margin-bottom: 2rem;
+}
+
+.filter-options {
+    display: flex;
+    gap: 1rem;
+}
+
+.filter-button, .sort-button {
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.filter-button:hover, .sort-button:hover {
+    background-color: #f5f5f5;
+}
+
+/* Results section */
+.results-container {
+    padding: 0 5%;
+    padding-top: 1%;
+}
+
+.results-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 2rem;
+}
+
+/* Sneaker card */
+.sneaker-card {
+    position: relative;
+    background-color: #f9f9f9;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.sneaker-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+.sneaker-image {
+    width: 100%;
+    height: 220px;
+    object-fit: contain;
+    background-color: #ffffff;
+}
+
+.sneaker-info {
+    padding: 1.2rem;
+}
+
+.sneaker-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    line-height: 1.3;
+    height: 2.6rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+
+    -webkit-box-orient: vertical;
+}
+
+.sneaker-brand {
+    color: #777;
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+}
+
+.sneaker-vendor {
+    display: inline-block;
+    background-color: #eee;
+    padding: 0.2rem 0.6rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    margin-bottom: 0.8rem;
+}
+
+.sneaker-price {
+    display: flex;
+    align-items: center;
+    margin-top: 0.5rem;
+}
+
+.sale-price {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #ff6b6b;
+    margin-right: 0.5rem;
+}
+
+.full-price {
+    font-size: 0.9rem;
+    color: #999;
+    text-decoration: line-through;
+}
+
+.discount-badge {
+    margin-left: auto;
+    background-color: #ffebe6;
+    color: #ff6b6b;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+/* Size selection */
+.size-options {
+display: flex;
+gap: 12px;
+margin-top: 16px;
+flex-wrap: wrap;
+}
+
+.size-box {
+width: 48px;
+height: 48px;
+display: flex;
+align-items: center;
+justify-content: center;
+border: 1px solid #e0e0e0;
+border-radius: 6px;
+cursor: pointer;
+font-size: 15px;
+font-weight: 500;
+transition: all 0.3s ease;
+text-align: center;
+background-color: #ffffff;
+box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.size-box:hover {
+border-color: #ff4d4d;
+box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.size-box.selected-size {
+background-color: #ff4d4d;
+color: #ffffff;
+border-color: #ff4d4d;
+transform: translateY(-2px);
+box-shadow: 0 4px 12px rgba(255, 77, 77, 0.2);
+}
+
+
+
+/* Error message */
+.loading-message {
+    text-align: center;
+    padding: 2rem;
+    color: var(--text-color);
+    background-color: var(--primary-color);
+    border-radius: 8px;
+    margin: 2rem auto;
+    max-width: 600px;
+}
+
+/* Error message */
+.error-message {
+    text-align: center;
+    padding: 2rem;
+    color: var(--text-color);
+    background-color: var(--primary-color);
+    border-radius: 8px;
+    margin: 2rem auto;
+    max-width: 600px;
+}
+
+/* Error message */
+.no-results-message {
+    text-align: center;
+    padding: 2rem;
+    color: var(--text-color);
+    background-color: var(--primary-color);
+    border-radius: 8px;
+    margin: 2rem auto;
+    max-width: 600px;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+    .results-grid {
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 1.5rem;
+    }
+    
+    .filter-bar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+    
+    .filter-options {
+        width: 100%;
+        overflow-x: auto;
+        padding-bottom: 0.5rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .navbar {
+        padding: 1rem 5%;
+    }
+    
+    .logo {
+        font-size: 1.5rem;
+    }
+    
+    .results-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+}
+
+.main-content{
+    flex: 1;
+}
+/* Footer styles */
+.footer {
+    margin-top: auto;
+    padding: 30px 40px;
+    background-color: #f8f9fa;
+    border-top: 1px solid #e9ecef;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.footer-logo {
+    font-size: 24px;
+    font-weight: bold;
+    color: var(--text-color);
+}
+
+.footer-logo span {
+    color: var(--primary-color);
+}
+
+.footer-info {
+    text-align: center;
+    color: var(--text-color);
+}
+
+.footer-contact {
+    text-align: right;
+    color: var(--text-color);
+}
+
+.footer-contact a {
+    color: var(--primary-color);
+    text-decoration: none;
+}
+
+.footer-contact a:hover {
+    text-decoration: underline;
+}
+
+/* View More button */
+.view-more-container {
+    text-align: center;
+    margin: 30px 0;
+}
+
+.view-more-button {
+    background-color: #ff6b6b;
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    font-size: 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.view-more-button:hover {
+    background-color: #ff5252;
+}
+
+.view-more-button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
+/* Vendor Badge */
+.vendor-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: var(--primary-color);
+    color: white;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 10px;
+    font-weight: bold;
+    z-index: 10;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.scrollTopBtn {
+    display: none; /* Hidden by default */
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 15px 20px 16px;
+    border-radius: 50%;
+    font-size: 16px;
+}
+
+.scrollTopBtn:hover {
+    background-color: var(--primary-color-hover);
+}
+
+
+/* Flat Options Bar Styles */
+.options-bar {
+    background-color: var(--background-color);
+    margin: 0 0 15px 0;
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    border-bottom: 1px solid #e5e5e5;
+    width: 100%;
+    box-shadow: none;
+}
+
+.option-group {
+    display: flex;
+    align-items: center;
+    margin-right: 30px;
+}
+
+#currency-option {
+    padding: 5px;
+    font-size: 14px;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    cursor: pointer;
+}
+
+/* Ensure dropdown arrow looks proper */
+#currency-option:focus {
+    outline: none;
+    border-color: var(--accent-color);
+}
+
+#sort-option {
+    padding: 5px;
+    font-size: 14px;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    cursor: pointer;
+}
+
+/* Ensure dropdown arrow looks proper */
+#sort-option:focus {
+    outline: none;
+    border-color: var(--accent-color);
+}
+
+.option-group label {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-color);
+    margin-right: 10px;
+    white-space: nowrap;
+}
+
+.option-group select {
+    background-color: var(--background-color);
+    color: #333333;
+    border: none;
+    border-bottom: 2px solid #ff6a00;
+    border-radius: 0;
+    padding: 4px 22px 4px 0;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    min-width: 120px;
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23ff6a00%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+    background-position: right 0 center;
+    background-repeat: no-repeat;
+    background-size: 10px;
+    transition: all 0.2s ease;
+}
+
+.option-group select:focus {
+    outline: none;
+}
+
+/* Hide the apply button since the dropdowns will apply immediately */
+.apply-button {
+    display: none;
+}
+
+/* Dark mode adjustments */
+[data-theme="dark"] .options-bar {
+    background-color: #1c1c1e;
+    border-bottom: 1px solid #333333;
+}
+
+[data-theme="dark"] .option-group label {
+    color: #e5e5e5;
+}
+
+[data-theme="dark"] .option-group select {
+    color: #ffffff;
+    border-bottom: 2px solid #ff6a00;
+    background-color: transparent;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .options-bar {
+        flex-wrap: wrap;
+        padding: 10px 15px;
+    }
+    
+    .option-group {
+        margin: 5px 15px 5px 0;
+    }
+}
+
+/* Selected Size Style */
+.size-box.selected-size {
+    background-color: #ff6a00;
+    color: white;
+    border-color: #ff6a00;
+}
+
+/* Site Filter Dropdown Styles */
+.filter-dropdown {
+    position: relative;
+    margin-bottom: 15px;
+  }
+  
+  .dropdown-container {
+    position: relative;
+    width: 100%;
+    max-width: 240px;
+  }
+  
+  .dropdown-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 12px;
+    border: 1px solid var(--border-color, #ccc);
+    border-radius: 4px;
+    background-color: var(--background-color, white);
+    cursor: pointer;
+    font-size: 14px;
+  }
+  
+  .dropdown-header:hover {
+    border-color: var(--accent-color, #ff6b00);
+  }
+  
+  .dropdown-menu {
+    min-width: 240px; /* Ensures dropdown is wide enough */
+    max-width: 300px; /* Adjust if needed */
+    white-space: nowrap; /* Prevents text wrapping */
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    margin-top: 5px;
+    background-color: var(--background-color, white);
+    border: 1px solid var(--border-color, #ccc);
+    border-radius: 4px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    z-index: 100;
+    display: none;
+    max-height: 250px;
+    overflow-y: auto;
+  }
+  
+  .dropdown-menu.show {
+    display: block;
+  }
+  
+  .select-all-option {
+    padding: 8px 12px;
+    font-weight: 500;
+  }
+  
+  .dropdown-divider {
+    height: 1px;
+    background-color: var(--border-color, #ccc);
+    margin: 0;
+  }
+  
+  .site-options-container {
+    padding: 8px 0;
+  }
+  
+  .checkbox-option {
+    display: flex;
+    align-items: center;
+    padding: 6px 12px;
+    white-space: nowrap; /* Ensures full visibility */
+  }
+  
+  .checkbox-option:hover {
+    background-color: var(--hover-color, #f5f5f5);
+  }
+  
+  .checkbox-option input[type="checkbox"] {
+    margin-right: 8px;
+  }
+  
+  .dropdown-footer {
+    padding: 8px 12px;
+    border-top: 1px solid var(--border-color, #ccc);
+    display: flex;
+    justify-content: flex-end;
+  }
+  
+  .apply-button {
+    padding: 5px 12px;
+    background-color: var(--accent-color, #ff6b00);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+  }
+  
+  .apply-button:hover {
+    background-color: var(--accent-hover-color, #e55f00);
+  }
+  
+  /* Ensure dropdown is visible in dark mode */
+  [data-theme="dark"] .dropdown-menu {
+    background-color: var(--background-color, #333);
+  }
+  
+  [data-theme="dark"] .checkbox-option:hover {
+    background-color: var(--hover-color, #444);
+  }
+  
+  /* Make sure checkboxes use the theme's accent color */
+  input[type="checkbox"] {
+    accent-color: var(--accent-color, #ff6b00);
+  }
+  
+  /* Chevron animation for dropdown */
+  .dropdown-header .chevron-down {
+    transition: transform 0.2s ease;
+  }
+  
+  .dropdown-container.open .chevron-down {
+    transform: rotate(180deg);
+  }

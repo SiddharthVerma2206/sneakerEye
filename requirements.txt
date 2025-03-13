@@ -1,0 +1,8 @@
+requests==2.31.0
+lxml==4.9.3
+python-dateutil==2.8.2
+pytz==2023.3
+urllib3==2.0.4
+supabase==1.0.3
+fastapi==0.100.0
+uvicorn==0.23.2
