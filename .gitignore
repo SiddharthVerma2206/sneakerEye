@@ -1,3 +1,4 @@
 *.env
 Scraping/
 back/__pycache__
+env/
