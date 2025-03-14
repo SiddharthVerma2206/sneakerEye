@@ -125,7 +125,6 @@ function setupSiteFilterDropdown() {
         if (allSneakers.length > 0) {
             applyCurrencyAndFilters();
             displayMoreSneakers();
-            getdata();
         }else{
             getdata();
         }
@@ -172,7 +171,9 @@ function applyCurrencyAndFilters() {
     const selectedSites = getSelectedSites();
     
     // Filter sneakers by selected sites
-    filteredSneakers = allSneakers.filter(sneaker => selectedSites.includes(sneaker.site));
+    filteredSneakers = JSON.parse(JSON.stringify(
+        allSneakers.filter(sneaker => selectedSites.includes(sneaker.site))
+    ));
     
     // Apply currency conversion if not using original currency
     if (currencyOption !== 'original') {
@@ -306,46 +307,16 @@ function getdata() {
         });
 }
 
-// Apply filters and currency conversion to the data
-function applyCurrencyAndFilters() {
-    const currencyOption = document.getElementById('currency-option').value;
-    
-    // Create a deep copy of the sneakers to apply transformations
-    filteredSneakers = JSON.parse(JSON.stringify(allSneakers));
-    
-    // Apply currency conversion if not using original currency
-    if (currencyOption !== 'original') {
-        filteredSneakers.forEach(sneaker => {
-            sneaker.variants.forEach(variant => {
-                // Convert prices based on their range (assuming < 2000 is USD, otherwise INR)
-                const sourceCurrency = variant.price < 2000 ? 'usd' : 'inr';
-                
-                if (sourceCurrency !== currencyOption) {
-                    // Convert to target currency
-                    if (sourceCurrency === 'usd' && currencyOption === 'inr') {
-                        variant.price = variant.price * exchangeRates.inr;
-                        if (variant.full_price) {
-                            variant.full_price = variant.full_price * exchangeRates.inr;
-                        }
-                    } else if (sourceCurrency === 'inr' && currencyOption === 'usd') {
-                        variant.price = variant.price / exchangeRates.inr;
-                        if (variant.full_price) {
-                            variant.full_price = variant.full_price / exchangeRates.inr;
-                        }
-                    }
-                }
-            });
-        });
-    }
-    
-    // Reset display counter
-    displayedCount = 0;
-    document.getElementById('results').innerHTML = "";
-}
-
 function displayMoreSneakers() {
     let resultsDiv = document.getElementById("results");
     let viewMoreButton = document.getElementById("view-more-button");
+
+    if (filteredSneakers.length === 0) {
+        // No sneakers to display
+        resultsDiv.innerHTML = ""; // Clear any existing results
+        viewMoreButton.style.display = 'none';
+        return; // Exit the function early
+    }
     
     // Get the current filtered sneakers to display
     const sneakersToDisplay = filteredSneakers.length > 0 ? filteredSneakers : allSneakers;
