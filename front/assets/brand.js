@@ -135,6 +135,8 @@ function setupSiteFilterDropdown() {
         if (allSneakers.length > 0) {
             applyCurrencyAndFilters();
             displayMoreSneakers();
+        }else{
+            applyCurrencyAndFilters();
         }
     });
 }
@@ -322,20 +324,22 @@ function applySorting() {
     }
 }
 
-// Apply filters and currency conversion to the data
+// Function 1: Update applyCurrencyAndFilters
 function applyCurrencyAndFilters() {
     const currencyOption = document.getElementById('currency-option').value;
     const selectedSites = getSelectedSites();
     
     // Filter sneakers by selected sites
-    filteredSneakers = allSneakers.filter(sneaker => selectedSites.includes(sneaker.site));
+    filteredSneakers = JSON.parse(JSON.stringify(
+        allSneakers.filter(sneaker => selectedSites.includes(sneaker.site))
+    ));
     
     // Apply currency conversion if not using original currency
     if (currencyOption !== 'original') {
         filteredSneakers.forEach(sneaker => {
             sneaker.variants.forEach(variant => {
                 // Convert prices based on their range (assuming < 1000 is USD, otherwise INR)
-                const sourceCurrency = variant.price < 1000 ? 'usd' : 'inr';
+                const sourceCurrency = variant.price < 2000 ? 'usd' : 'inr';
                 
                 if (sourceCurrency !== currencyOption) {
                     // Convert to target currency
@@ -355,11 +359,11 @@ function applyCurrencyAndFilters() {
         });
     }
     
-    // Reset display counter
+    // Reset display counter and clear results
     displayedCount = 0;
     document.getElementById('results').innerHTML = "";
     
-    // Show no results message if no sites are selected
+    // Show no results message if no filtered sneakers
     if (filteredSneakers.length === 0) {
         let noresult = document.getElementById("no-results");
         noresult.innerHTML = `
@@ -378,6 +382,13 @@ function applyCurrencyAndFilters() {
 function displayMoreSneakers() {
     let resultsDiv = document.getElementById("results");
     let viewMoreButton = document.getElementById("view-more-button");
+
+    if (filteredSneakers.length === 0) {
+        // No sneakers to display
+        resultsDiv.innerHTML = ""; // Clear any existing results
+        viewMoreButton.style.display = 'none';
+        return; // Exit the function early
+    }
     
     // Get the current filtered sneakers to display
     const sneakersToDisplay = filteredSneakers.length > 0 ? filteredSneakers : allSneakers;
@@ -405,7 +416,7 @@ function displayMoreSneakers() {
         
         if (currencyOption === 'original') {
             // Use the original currency symbol based on price range
-            defaultCurrencySymbol = firstVariant.price < 1000 ? '$' : '₹';
+            defaultCurrencySymbol = firstVariant.price < 2000 ? '$' : '₹';
         } else {
             // Use the selected currency symbol
             defaultCurrencySymbol = currencyOption === 'usd' ? '$' : '₹';

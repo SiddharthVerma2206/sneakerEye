@@ -125,6 +125,9 @@ function setupSiteFilterDropdown() {
         if (allSneakers.length > 0) {
             applyCurrencyAndFilters();
             displayMoreSneakers();
+            getdata();
+        }else{
+            getdata();
         }
     });
 }
