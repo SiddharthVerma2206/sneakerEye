@@ -457,6 +457,7 @@ box-shadow: 0 4px 12px rgba(255, 77, 77, 0.2);
     gap: 3rem;
     padding: 0.5rem 2rem;
     margin-bottom: 1rem;
+    border-bottom: 1px solid #eee;
 }
 
 .option-group {
@@ -501,11 +502,6 @@ box-shadow: 0 4px 12px rgba(255, 77, 77, 0.2);
     cursor: pointer;
 }
 
-/* Ensure dropdown arrow looks proper */
-#currency-option:focus {
-    outline: none;
-    border-color: var(--accent-color);
-}
 
 #sort-option {
     padding: 5px;
@@ -515,11 +511,7 @@ box-shadow: 0 4px 12px rgba(255, 77, 77, 0.2);
     cursor: pointer;
 }
 
-/* Ensure dropdown arrow looks proper */
-#sort-option:focus {
-    outline: none;
-    border-color: var(--accent-color);
-}
+
 
 .option-group label {
     font-size: 14px;
@@ -594,7 +586,7 @@ box-shadow: 0 4px 12px rgba(255, 77, 77, 0.2);
 
 /* Site Filter Dropdown Styles */
 .filter-dropdown {
-    position: relative;
+    position:relative;
     margin-bottom: 15px;
   }
   
@@ -721,7 +713,6 @@ box-shadow: 0 4px 12px rgba(255, 77, 77, 0.2);
    .brand-headline {
     text-align: center;
     padding: 2rem 0;
-    margin-bottom: 1.5rem;
 }
 
 .brand-headline h2 {

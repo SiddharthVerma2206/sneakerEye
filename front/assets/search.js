@@ -258,7 +258,7 @@ function getdata() {
     }
     
     // Fetch all sneakers from the API
-    fetch(`http://127.0.0.1:8000/sneakers?search=${encodeURIComponent(query)}&sort=${sortOption}&site=all`)
+    fetch(`http://127.0.0.1:8000/sneakers?search=${encodeURIComponent(query)}&sort=${sortOption}`)
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');

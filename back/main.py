@@ -65,8 +65,6 @@ def get_brands(brand : str = Query()):
 def get_sneakers(
     search: str = Query(None),
     sort: str = Query("price-low-high"),
-    site: str = Query("all"),
-    currency: str = Query("original")
 ):  
     query = supabase.table("sneaker_data").select("*")
     
