@@ -4,10 +4,10 @@
     --text-color: #333333;
     --primary-color: #ff6b00;
     --primary-color-hover: #ff8c3f;
-    --secondary-color: #1a1a1a;
+    --secondary-color: #777777;
     --nav-background: #ffffff;
     --search-background: #ffffff;
-    --search-border: #e0e0e0;
+    --search-border: #dddddd;
     --search-text: #333333;
     --card-background: #ffffff;
     --card-border: #e0e0e0;
@@ -18,9 +18,12 @@
     --size-box-selected-text: #ffffff;
     --footer-background: #f5f5f5;
     --footer-text: #333333;
-    --discount-badge: #ff6b00;
+    --discount-badge-bg: #ffebe6;
+    --discount-badge-text: #ff6b00;
     --discount-text: #ffffff;
     --shadow-color: rgba(0, 0, 0, 0.1);
+    --hover-color: #f5f5f5;
+    --border-color: #eeeeee;
 }
 
 :root[data-theme="dark"] {
@@ -28,7 +31,7 @@
     --text-color: #f0f0f0;
     --primary-color: #ff6b00;
     --primary-color-hover: #ff8c3f;
-    --secondary-color: #f0f0f0;
+    --secondary-color: #999999;
     --nav-background: #1a1a1a;
     --search-background: #1a1a1a;
     --search-border: #333333;
@@ -42,25 +45,49 @@
     --size-box-selected-text: #ffffff;
     --footer-background: #1a1a1a;
     --footer-text: #f0f0f0;
-    --discount-badge: #ff6b00;
+    --discount-badge-bg: #663300;
+    --discount-badge-text: #ffffff;
     --discount-text: #ffffff;
     --shadow-color: rgba(0, 0, 0, 0.3);
+    --hover-color: #333333;
+    --border-color: #333333;
 }
 
-/* Base styles that apply to both light and dark modes */
+/* Reset and base styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
 body {
     background-color: var(--background-color);
     color: var(--text-color);
+    line-height: 1.6;
     transition: background-color 0.3s ease, color 0.3s ease;
 }
 
+/* Navigation bar */
 .navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.0rem 5%;
     background-color: var(--nav-background);
+    box-shadow: 0 2px 10px var(--shadow-color);
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
     border-bottom: 1px solid var(--card-border);
 }
 
 .logo {
+    font-size: 1.8rem;
+    font-weight: 700;
     color: var(--text-color);
+    text-decoration: none;
 }
 
 .logo span {
@@ -73,38 +100,107 @@ body {
 }
 
 .nav-buttons a {
+    text-decoration: none;
+    margin-left: 1.5rem;
+    font-weight: 600;
     color: var(--text-color);
 }
 
-.signin:hover, .signup:hover {
+.signin {
+    color: var(--secondary-color);
+}
+
+.signin:hover {
     color: var(--primary-color);
 }
 
 .signup {
+    color: white;
     background-color: var(--primary-color);
-    color: white !important;
+    padding: 0.5rem 1.2rem;
+    border-radius: 25px;
+    transition: background-color 0.3s;
 }
 
 .signup:hover {
     background-color: var(--primary-color-hover);
 }
 
+/* Search bar */
 .search-bar {
+    border-radius: 30px;
+    display: flex;
+    margin-top: 2rem;
+    max-width: 600px;
     background-color: transparent;
     border: 1px solid var(--search-border);
 }
 
 .search-input {
+    flex: 1;
+    padding: 1rem 1.5rem;
+    font-size: 1rem;
+    border: 2px solid var(--search-border);
+    border-radius: 30px 0 0 30px;
+    outline: none;
     background-color: var(--search-background);
     color: var(--search-text);
 }
 
 .search-button {
+    padding: 1rem 1.5rem;
     background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 0 30px 30px 0;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.3s;
 }
 
 .search-button:hover {
     background-color: var(--primary-color-hover);
+}
+
+/* Footer styles */
+.footer {
+    margin-top: auto;
+    padding: 30px 40px;
+    background-color: var(--footer-background);
+    border-top: 1px solid var(--card-border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--footer-text);
+}
+
+.footer-logo {
+    font-size: 24px;
+    font-weight: bold;
+    color: var(--text-color);
+}
+
+.footer-logo span {
+    color: var(--primary-color);
+}
+
+.footer-info {
+    text-align: center;
+    color: var(--text-color);
+}
+
+.footer-contact {
+    text-align: right;
+    color: var(--text-color);
+}
+
+.footer-contact a {
+    color: var(--primary-color);
+    text-decoration: none;
+}
+
+.footer-contact a:hover {
+    text-decoration: underline;
 }
 
 /* Theme toggle button */
@@ -137,86 +233,75 @@ body {
     display: none;
 }
 
-/* Search results page specific styles */
-.search-header {
-    background-color: var(--background-color);
-    color: var(--text-color);
-}
-
-.search-title {
-    color: var(--text-color);
-}
-
-.search-query {
-    color: var(--primary-color);
-}
-
-.sneaker-card {
-    background-color: var(--card-background);
-    border: 1px solid var(--card-border);
-    box-shadow: 0 2px 8px var(--shadow-color);
-}
-
-.sneaker-title {
-    color: var(--text-color);
-}
-
-.sneaker-brand {
-    color: var(--secondary-color);
-}
-
-.size-box {
-    background-color: var(--size-box-background);
-    border: 1px solid var(--size-box-border);
-    color: var(--size-box-text);
-}
-
-.size-box:hover {
-    border-color: var(--primary-color);
-}
-
-.selected-size {
-    background-color: var(--size-box-selected);
-    color: var(--size-box-selected-text);
-    border-color: var(--size-box-selected);
-}
-
-.sale-price {
-    color: var(--primary-color);
-}
-
-.full-price {
-    color: var(--text-color);
-    opacity: 0.7;
-}
-
-.discount-badge {
-    background-color: var(--discount-badge);
-    color: var(--discount-text);
-}
-
-.footer {
-    background-color: var(--footer-background);
-    color: var(--footer-text);
-}
-
-.footer a {
-    color: var(--primary-color);
-}
-
-.footer-logo span {
-    color: var(--primary-color);
-}
-
-.loading, .error-message, .no-results {
-    color: var(--text-color);
-}
-
+/* Common button styles */
 .view-more-button {
     background-color: var(--primary-color);
     color: white;
+    border: none;
+    padding: 12px 30px;
+    font-size: 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
 }
 
 .view-more-button:hover {
+    background-color: var(--primary-color-hover);
+}
+
+.view-more-button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
+/* Common message styles */
+.loading-message, .error-message, .no-results-message {
+    text-align: center;
+    padding: 2rem;
+    color: var(--text-color);
+    background-color: var(--card-background);
+    border-radius: 8px;
+    margin: 2rem auto;
+    max-width: 600px;
+    border: 1px solid var(--card-border);
+}
+
+/* Responsive styles */
+@media (max-width: 992px) {
+    .navbar {
+        padding: 1rem 5%;
+    }
+    
+    .logo {
+        font-size: 1.5rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .navbar {
+        padding: 1rem 5%;
+    }
+    
+    .logo {
+        font-size: 1.5rem;
+    }
+}
+
+/* Scroll to top button */
+.scrollTopBtn {
+    display: none;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 15px 20px 16px;
+    border-radius: 50%;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.scrollTopBtn:hover {
     background-color: var(--primary-color-hover);
 }
