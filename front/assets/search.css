@@ -454,7 +454,7 @@ box-shadow: 0 4px 12px rgba(255, 77, 77, 0.2);
     justify-content: center;
     align-items: center;
     flex-wrap: wrap;
-    gap: 3rem;
+    gap: 5rem;
     padding: 0.5rem 2rem;
     margin-bottom: 1rem;
     border-bottom: 1px solid #eee;
@@ -513,7 +513,7 @@ box-shadow: 0 4px 12px rgba(255, 77, 77, 0.2);
 
 
 
-.option-group label {
+.options-bar label {
     font-size: 14px;
     font-weight: 500;
     color: var(--text-color);
@@ -587,7 +587,8 @@ box-shadow: 0 4px 12px rgba(255, 77, 77, 0.2);
 /* Site Filter Dropdown Styles */
 .filter-dropdown {
     position:relative;
-    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
   }
   
   .dropdown-container {
